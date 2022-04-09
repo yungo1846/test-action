@@ -31,35 +31,31 @@ jobs:
     - name: Detect multi-workspace code change
       run: |
         current_branch=${{ github.head_ref }}
-        changed_workspaces=$(yarn workspaces since list origin/main origin/$current_branch)
         
-        if [ -f result.txt ]; then
-          rm $result_file
-        fi
-        
-        for workspace in $changed_workspaces
-        do
-          echo "📦 ${workspace}" >> result.txt;
-        done
-        
-        echo "num_of_workspaces=$(grep -c ^ result.txt)" >> $GITHUB_ENV
-        echo "workspace_list=123" >> $GITHUB_ENV
+        echo "changed_workspaces=$(yarn workspaces since list origin/main origin/$current_branch)" >> $GITHUB_ENV
         
 
     # Comment PR
     - name: Comment PR
       uses: actions/github-script@v6
       env:
-        num_of_workspaces: ${{ env.num_of_workspaces }}
-        workspace_list: ${{ env.workspace_list }}
+        changed_workspaces: ${{ env.changed_workspaces }}
+
       with:
         script: |          
-          if (process.env.num_of_workspaces) {
+          const changedWorkSpaces = process.env.changed_workspaces
+          console.log(changedWorkSpaces)
+          const numOfChangedWorkspaces = changedWorkSpaces.split(' ').length
+          console.log(numOfChangedWorkspaces)
+          const result = changedWorkSpaces.split(' ').map((workspace) => `📦 ${workspace}`).join('\n)
+          console.log(result)
+          
+          if (numOfChangedWorkspaces >= 2) {
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `⚠️ **두 개 이상의 workspace 에서 변화가 감지되었습니다.**\n의도하지 않은 변경이라면 커밋을 reset 해주세요.\n\n 변경된 workspace 목록:\n${process.env.workspace_list}`
+              body: `⚠️ **두 개 이상의 workspace 에서 변화가 감지되었습니다.**\n의도하지 않은 변경이라면 커밋을 reset 해주세요.\n\n 변경된 workspace 목록:\n${result}`
             })
           }
           
