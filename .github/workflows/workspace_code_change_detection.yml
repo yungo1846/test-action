@@ -28,6 +28,6 @@ jobs:
     - name: Detect multi-workspace code change
       run: |
         current_branch=${{ github.head_ref }}
-        git --version
+        git log
 
     
