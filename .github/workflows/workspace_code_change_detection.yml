@@ -27,7 +27,7 @@ jobs:
     # Detect multi-workspace code change
     - name: Detect multi-workspace code change
       run: |
-        current_branch=$(git rev-parse --abbrev-ref HEAD)
+        current_branch=${{ github.head_ref }}
         workspaces=$(yarn workspaces since list main $current_branch)
         num_of_workspaces=$(echo $workspaces | wc -w | xargs)
       
