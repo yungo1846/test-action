@@ -48,7 +48,7 @@ jobs:
           console.log(changedWorkSpaces)
           const numOfChangedWorkspaces = changedWorkSpaces.split(' ').length
           console.log(numOfChangedWorkspaces)
-          const result = changedWorkSpaces.split(' ').map((workspace) => `📦 ${workspace}`).join('\n)
+          const result = changedWorkSpaces.split(' ').map((workspace) => `📦 ${workspace}`).join('\n')
           console.log(result)
           
           if (numOfChangedWorkspaces >= 2) {
