@@ -51,7 +51,7 @@ jobs:
       with:
         script: |          
           if (process.env.num_of_workspaces) {
-            github.issues.createComment({
+            github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
