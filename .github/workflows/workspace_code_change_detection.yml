@@ -12,6 +12,9 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+      with:
+        ref: ${{ github.head_ref }}
+        fetch-depth: 0
       
     # Node 설치
     - name: Setup Node
@@ -29,5 +32,3 @@ jobs:
       run: |
         current_branch=${{ github.head_ref }}
         yarn workspaces since list origin/main origin/$current_branch
-
-    
