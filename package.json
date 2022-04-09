@@ -1,0 +1,13 @@
+{
+  "name": "test-action",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "kiyung <kiyung@toss.im>",
+  "license": "MIT",
+  "packageManager": "yarn@3.2.0",
+  "workspaces": [
+    "services/*",
+    "libraries/*",
+    "tools/*"
+  ]
+}
