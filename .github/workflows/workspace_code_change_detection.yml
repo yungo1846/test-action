@@ -31,4 +31,26 @@ jobs:
     - name: Detect multi-workspace code change
       run: |
         current_branch=${{ github.head_ref }}
-        yarn workspaces since list origin/main origin/$current_branch
+        changed_workspaces=$(yarn workspaces since list origin/main origin/$current_branch)
+        rm result.txt
+        
+        for workspace in $changed_workspaces
+        do
+          echo "📦 ${workspace}" >> result.txt;
+        done
+        
+        num_of_workspaces=$(grep -c ^ result.txt)
+
+    # Comment PR
+    - name: Comment PR
+      uses: actions/github-script@v4
+      with:
+        script: |
+          if (($num_of_workspaces >= 2)); then
+            github.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: '**두 개 이상의 workspace 에서 변화가 감지되었습니다.**\n의도하지 않은 변경이라면 커밋을 reset 해주세요.\n\n 변경된 workspace 목록:\n'
+          })
+          fi
