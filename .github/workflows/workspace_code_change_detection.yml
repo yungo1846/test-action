@@ -31,8 +31,9 @@ jobs:
     - name: Detect multi-workspace code change
       run: |
         current_branch=${{ github.head_ref }}
+        changed_workspaces=$(echo -n $(yarn workspaces since list origin/main origin/$current_branch))
         
-        echo "changed_workspaces=$(yarn workspaces since list origin/main origin/$current_branch)" >> $GITHUB_ENV
+        echo "changed_workspaces=$changed_workspaces" >> $GITHUB_ENV
         
 
     # Comment PR
