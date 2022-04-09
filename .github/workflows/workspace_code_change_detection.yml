@@ -42,13 +42,16 @@ jobs:
           echo "📦 ${workspace}" >> result.txt;
         done
         
+        echo "num_of_workspaces=$(grep -c ^ result.txt)" >> $GITHUB_ENV
+        echo "workspace_list=$(cat result.txt)" >> $GITHUB_ENV
+        
 
     # Comment PR
     - name: Comment PR
       uses: actions/github-script@v6
       env:
-        num_of_workspaces: ${{ rep -c ^ result.txt }}
-        workspace_list: ${{ cat result.txt }}
+        num_of_workspaces: ${{ env.num_of_workspaces }}
+        workspace_list: ${{ env.workspace_list }}
       with:
         script: |          
           if (process.env.num_of_workspaces) {
