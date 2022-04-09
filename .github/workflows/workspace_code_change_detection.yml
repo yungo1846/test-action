@@ -43,7 +43,7 @@ jobs:
         done
         
         echo "num_of_workspaces=$(grep -c ^ result.txt)" >> $GITHUB_ENV
-        echo "workspace_list=$(cat result.txt)" >> $GITHUB_ENV
+        echo "workspace_list=123" >> $GITHUB_ENV
         
 
     # Comment PR
