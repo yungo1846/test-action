@@ -28,25 +28,6 @@ jobs:
     - name: Detect multi-workspace code change
       run: |
         current_branch=${{ github.head_ref }}
-        workspaces=$(yarn workspaces since list main $current_branch)
-        echo $workspaces
-      
-    # Comment PR
-    - name: Comment PR
-      uses: actions/github-script@v4
-      env:
-        hash: ${{ github.event.pull_request.head.sha }}
-      with:
-        script: |
-          if (($num_of_workspaces >= 2)); then
-            github.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: '**⚠️ 두개 이상의 workspace 코드가 변경되었습니다 ⚠️**\n\n변경된 workspace 목록\n$(for workspace in $workspaces
-                do
-                  echo "📦 ${workspace}";
-                done)
-            })
-          fi
+        echo $current_branch
+
     
