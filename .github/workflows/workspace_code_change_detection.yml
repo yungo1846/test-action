@@ -31,15 +31,19 @@ jobs:
     - name: Detect multi-workspace code change
       run: |
         current_branch=${{ github.head_ref }}
+        result_file=result.txt
         changed_workspaces=$(yarn workspaces since list origin/main origin/$current_branch)
-        rm result.txt
+        
+        if [ -f $result_file ]; then
+          rm $result_file
+        fi
         
         for workspace in $changed_workspaces
         do
-          echo "📦 ${workspace}" >> result.txt;
+          echo "📦 ${workspace}" >> $result_file;
         done
         
-        num_of_workspaces=$(grep -c ^ result.txt)
+        num_of_workspaces=$(grep -c ^ $result_file)
 
     # Comment PR
     - name: Comment PR
@@ -51,6 +55,6 @@ jobs:
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
-            body: '**두 개 이상의 workspace 에서 변화가 감지되었습니다.**\n의도하지 않은 변경이라면 커밋을 reset 해주세요.\n\n 변경된 workspace 목록:\n'
+            body: '**두 개 이상의 workspace 에서 변화가 감지되었습니다.**\n의도하지 않은 변경이라면 커밋을 reset 해주세요.\n\n 변경된 workspace 목록:\n$(cat $result_file)'
           })
           fi
